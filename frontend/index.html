@@ -1,63 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Model Voting Contest</title>
-  <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hành Trình Tuổi Trẻ 2025 - Bình Chọn Người Mẫu</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/vietnam-theme.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <header>
-    <div class="container">
-      <h1>Model Voting Contest</h1>
-      <nav>
-        <ul>
-          <li><a href="index.html" class="active">Vote</a></li>
-        </ul>
-      </nav>
-      <a href="/admin" class="admin-link">Admin</a>
+<div class="bronze-drum top-right"></div>
+<div class="bronze-drum bottom-left"></div>
+
+<header class="vietnam-pattern">
+<div class="container">
+  <div class="logo-container">
+    <img src="/uploads/vnus-logo.png" alt="VN-US Logo">
+    <div>
+      <h1>Hành Trình Tuổi Trẻ 2025</h1>
+      <div class="event-title">ĐOÀN TRƯỜNG ĐÀO TẠO QUỐC TẾ</div>
     </div>
-  </header>
+  </div>
+  <div class="header-right">
+    <nav>
+      <ul>
+        <li><a href="index.html" class="active">Bình Chọn</a></li>
+      </ul>
+    </nav>
+    <a href="/admin" class="admin-link"><i class="fas fa-user-shield"></i> Quản Trị</a>
+  </div>
+</div>
+</header>
 
-  <main class="container">
-    <section class="intro">
-      <h2>Vote for Your Favorite Model</h2>
-      <p>Select a model below and cast your vote. You can vote once per day.</p>
-    </section>
+<main class="container">
+<section class="intro fade-in">
+  <h2>Bình Chọn Người Mẫu Xuất Sắc Nhất</h2>
+  <p>Chào mừng bạn đến với cuộc thi bình chọn người mẫu trong khuôn khổ chương trình "Hành Trình Tuổi Trẻ" 2025. Hãy chọn người mẫu yêu thích và bình chọn ngay hôm nay!</p>
+</section>
 
-    <section class="models-grid" id="models-container">
-      <!-- Models will be loaded dynamically -->
-      <div class="loading">Loading models...</div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="container">
-      <p>&copy; 2025 Model Voting Contest. All rights reserved.</p>
-    </div>
-  </footer>
-
-  <div class="modal" id="vote-modal">
-    <div class="modal-content">
-      <span class="close-button">&times;</span>
-      <h2>Confirm Your Vote</h2>
-      <div class="modal-body">
-        <div class="model-preview">
-          <img id="modal-model-image" src="/placeholder.svg?height=150&width=150" alt="Model">
-          <h3 id="modal-model-name">Model Name</h3>
-        </div>
-        <form id="vote-form">
-          <div class="form-group">
-            <label for="voter-email">Your Email:</label>
-            <input type="email" id="voter-email" required>
-          </div>
-          <button type="submit" class="btn btn-primary">Confirm Vote</button>
-        </form>
+<section class="program-info glass-card slide-in-left">
+  <div class="program-info-content">
+    <h3>Về Chương Trình "Hành Trình Tuổi Trẻ" 2025</h3>
+    <p>Chương trình "Hành Trình Tuổi Trẻ" 2025 là sự kiện thường niên do Đoàn Trường Đào Tạo Quốc Tế tổ chức, nhằm tôn vinh vẻ đẹp, tài năng và bản sắc văn hóa Việt Nam. Năm nay, chương trình mang chủ đề "Thiên Cổ Việt Nam" - hướng về nguồn cội và giá trị truyền thống dân tộc.</p>
+    
+    <div class="program-highlights">
+      <div class="highlight-item hover-lift">
+        <h4><i class="far fa-calendar-alt"></i> Thời Gian</h4>
+        <p>15/05/2025 - 30/05/2025</p>
+      </div>
+      <div class="highlight-item hover-lift delay-100">
+        <h4><i class="fas fa-map-marker-alt"></i> Địa Điểm</h4>
+        <p>Trung tâm Văn hóa Nghệ thuật Quốc gia, Hà Nội</p>
+      </div>
+      <div class="highlight-item hover-lift delay-200">
+        <h4><i class="fas fa-users"></i> Đối Tượng</h4>
+        <p>Sinh viên Trường Đào Tạo Quốc Tế và các trường đại học trên toàn quốc</p>
       </div>
     </div>
   </div>
+</section>
 
-  <script src="js/vote.js"></script>
+<section class="models-grid" id="models-container">
+  <!-- Models will be loaded dynamically -->
+  <div class="loading">Đang tải danh sách người mẫu...</div>
+</section>
+</main>
+
+<footer class="vietnam-pattern">
+<div class="container">
+  <img src="/uploads/vnus-logo.png" alt="VN-US Logo" class="footer-logo">
+  <p>Chương trình "Hành Trình Tuổi Trẻ" 2025</p>
+  <p>ĐOÀN TRƯỜNG ĐÀO TẠO QUỐC TẾ</p>
+  <p>&copy; 2025 Bản quyền thuộc về Ban tổ chức chương trình</p>
+  
+  <div class="social-links">
+    <a href="#" class="hover-glow"><i class="fab fa-facebook"></i></a>
+    <a href="#" class="hover-glow"><i class="fab fa-instagram"></i></a>
+    <a href="#" class="hover-glow"><i class="fab fa-youtube"></i></a>
+    <a href="#" class="hover-glow"><i class="fab fa-tiktok"></i></a>
+  </div>
+</div>
+</footer>
+
+<div class="modal" id="vote-modal">
+<div class="modal-content">
+  <span class="close-button">&times;</span>
+  <h2>Xác Nhận Bình Chọn</h2>
+  <div class="modal-body">
+    <div class="model-preview">
+      <img id="modal-model-image" src="/placeholder.svg?height=150&width=150" alt="Người mẫu">
+      <h3 id="modal-model-name">Tên người mẫu</h3>
+    </div>
+    <form id="vote-form">
+      <div class="form-group">
+        <label for="voter-email">Email của bạn:</label>
+        <input type="email" id="voter-email" required placeholder="Nhập email của bạn">
+      </div>
+      <button type="submit" class="btn btn-primary">Xác Nhận Bình Chọn</button>
+    </form>
+  </div>
+</div>
+</div>
+
+<script src="js/vote.js"></script>
 </body>
 </html>
 
