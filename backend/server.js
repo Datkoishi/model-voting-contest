@@ -7,6 +7,7 @@ import dotenv from "dotenv"
 // Import routes
 import modelRoutes from "./routes/modelRoutes.js"
 import voteRoutes from "./routes/voteRoutes.js"
+import adminRoutes from "./routes/adminRoutes.js"
 
 // Import middleware
 import { errorHandler, notFound } from "./middleware/errorHandler.js"
@@ -34,11 +35,27 @@ app.use(express.urlencoded({ extended: true }))
 // Serve static files from frontend directory
 app.use(express.static(path.join(__dirname, "../frontend")))
 
+// Create uploads directory if it doesn't exist
+import fs from "fs"
+const uploadsDir = path.join(__dirname, "../frontend/uploads")
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true })
+}
+
 // API Routes
 app.use("/api/models", modelRoutes)
 app.use("/api", voteRoutes)
+app.use("/api/admin", adminRoutes)
 
 // Serve frontend for all other routes
+app.get("/admin", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/admin/login.html"))
+})
+
+app.get("/admin/dashboard", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/admin/dashboard.html"))
+})
+
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/index.html"))
 })
@@ -65,6 +82,7 @@ async function startServer() {
       console.log(`Server running on port ${PORT}`)
       console.log(`API endpoints available at http://localhost:${PORT}/api`)
       console.log(`Frontend available at http://localhost:${PORT}`)
+      console.log(`Admin panel available at http://localhost:${PORT}/admin`)
     })
   } catch (error) {
     console.error("Failed to start server:", error)
