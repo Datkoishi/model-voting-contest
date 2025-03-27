@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Model Voting Contest</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Model Voting Contest</h1>
+      <nav>
+        <ul>
+          <li><a href="index.html" class="active">Vote</a></li>
+          <li><a href="ranking.html">Rankings</a></li>
+          <li><a href="results.html">Results</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="intro">
+      <h2>Vote for Your Favorite Model</h2>
+      <p>Select a model below and cast your vote. You can vote once per day.</p>
+    </section>
+
+    <section class="models-grid" id="models-container">
+      <!-- Models will be loaded dynamically -->
+      <div class="loading">Loading models...</div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 Model Voting Contest. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <div class="modal" id="vote-modal">
+    <div class="modal-content">
+      <span class="close-button">&times;</span>
+      <h2>Confirm Your Vote</h2>
+      <div class="modal-body">
+        <div class="model-preview">
+          <img id="modal-model-image" src="/placeholder.svg?height=150&width=150" alt="Model">
+          <h3 id="modal-model-name">Model Name</h3>
+        </div>
+        <form id="vote-form">
+          <div class="form-group">
+            <label for="voter-email">Your Email:</label>
+            <input type="email" id="voter-email" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Confirm Vote</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/vote.js"></script>
+</body>
+</html>
+

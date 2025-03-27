@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Final Results - Model Voting Contest</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Model Voting Contest</h1>
+      <nav>
+        <ul>
+          <li><a href="index.html">Vote</a></li>
+          <li><a href="ranking.html">Rankings</a></li>
+          <li><a href="results.html" class="active">Results</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="intro">
+      <h2>Final Results</h2>
+      <p>The official results of our model voting contest. Congratulations to all participants!</p>
+    </section>
+
+    <section class="results-container">
+      <div class="winners-podium">
+        <div class="podium-item second-place" id="second-place">
+          <div class="podium-number">2</div>
+          <div class="podium-model">
+            <img src="/placeholder.svg?height=120&width=120" alt="Second Place">
+            <h3>Loading...</h3>
+            <p class="votes">0 votes</p>
+          </div>
+          <div class="podium-base"></div>
+        </div>
+        <div class="podium-item first-place" id="first-place">
+          <div class="podium-number">1</div>
+          <div class="podium-model">
+            <img src="/placeholder.svg?height=150&width=150" alt="First Place">
+            <h3>Loading...</h3>
+            <p class="votes">0 votes</p>
+          </div>
+          <div class="podium-base"></div>
+        </div>
+        <div class="podium-item third-place" id="third-place">
+          <div class="podium-number">3</div>
+          <div class="podium-model">
+            <img src="/placeholder.svg?height=100&width=100" alt="Third Place">
+            <h3>Loading...</h3>
+            <p class="votes">0 votes</p>
+          </div>
+          <div class="podium-base"></div>
+        </div>
+      </div>
+
+      <div class="results-table-container">
+        <h3>Complete Results</h3>
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Model</th>
+              <th>Votes</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+          <tbody id="results-table-body">
+            <!-- Results will be loaded dynamically -->
+            <tr>
+              <td colspan="4" class="loading-cell">Loading results...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="results-chart">
+        <h3>Vote Distribution</h3>
+        <canvas id="results-chart"></canvas>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 Model Voting Contest. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="js/results.js"></script>
+</body>
+</html>
+
