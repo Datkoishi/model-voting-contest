@@ -1,238 +1,344 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard - Model Voting Contest</title>
-  <link rel="stylesheet" href="../css/style.css">
-  <link rel="stylesheet" href="../css/admin.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bảng điều khiển quản trị - Cuộc thi bình chọn người mẫu</title>
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/admin.css">
 </head>
 <body class="admin-page">
-  <header class="admin-header">
-    <div class="container">
-      <h1>Admin Dashboard</h1>
-      <div class="admin-nav">
-        <nav>
-          <ul>
-            <li><a href="#" class="active" data-section="models">Models</a></li>
-            <li><a href="#" data-section="votes">Votes</a></li>
-            <li><a href="#" data-section="settings">Settings</a></li>
-          </ul>
-        </nav>
-        <div class="admin-user">
-          <span id="admin-username">Admin</span>
-          <button id="logout-btn" class="btn btn-outline">Logout</button>
+<header class="admin-header">
+  <div class="container">
+    <h1>Bảng điều khiển quản trị</h1>
+    <div class="admin-nav">
+      <nav>
+        <ul>
+          <li><a href="#" class="active" data-section="models">Người mẫu</a></li>
+          <li><a href="#" data-section="votes">Phiếu bầu</a></li>
+          <li><a href="#" data-section="rankings">Xếp hạng</a></li>
+          <li><a href="#" data-section="results">Kết quả</a></li>
+          <li><a href="#" data-section="settings">Cài đặt</a></li>
+        </ul>
+      </nav>
+      <div class="admin-user">
+        <span id="admin-username">Admin</span>
+        <button id="logout-btn" class="btn btn-outline">Đăng xuất</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="container admin-main">
+  <!-- Models Section -->
+  <section id="models-section" class="admin-section active">
+    <div class="section-header">
+      <h2>Quản lý người mẫu</h2>
+      <button id="add-model-btn" class="btn btn-primary">Thêm người mẫu mới</button>
+    </div>
+    
+    <div class="admin-filters">
+      <div class="search-box">
+        <input type="text" id="search-models" placeholder="Tìm kiếm theo tên hoặc đội...">
+      </div>
+      <div class="sort-options">
+        <label for="sort-models">Sắp xếp theo:</label>
+        <select id="sort-models">
+          <option value="name-asc">Tên (A-Z)</option>
+          <option value="name-desc">Tên (Z-A)</option>
+          <option value="id-asc">ID (Tăng dần)</option>
+          <option value="id-desc">ID (Giảm dần)</option>
+          <option value="votes-desc">Nhiều phiếu nhất</option>
+          <option value="votes-asc">Ít phiếu nhất</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="admin-table-container">
+      <table class="admin-table" id="models-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Hình ảnh</th>
+            <th>Tên</th>
+            <th>Mã</th>
+            <th>Đội</th>
+            <th>Phiếu bầu</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody id="models-table-body">
+          <tr>
+            <td colspan="7" class="loading-cell">Đang tải người mẫu...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Votes Section -->
+  <section id="votes-section" class="admin-section">
+    <div class="section-header">
+      <h2>Thống kê phiếu bầu</h2>
+      <div class="stats-cards">
+        <div class="stat-card">
+          <h3>Tổng phiếu bầu</h3>
+          <p id="total-votes">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>Phiếu bầu hôm nay</h3>
+          <p id="today-votes">0</p>
+        </div>
+        <div class="stat-card">
+          <h3>Người bầu duy nhất</h3>
+          <p id="unique-voters">0</p>
         </div>
       </div>
     </div>
-  </header>
+    
+    <div class="admin-filters">
+      <div class="date-filter">
+        <label for="date-from">Từ:</label>
+        <input type="date" id="date-from">
+        <label for="date-to">Đến:</label>
+        <input type="date" id="date-to">
+        <button id="filter-votes-btn" class="btn btn-primary">Lọc</button>
+      </div>
+    </div>
+    
+    <div class="admin-table-container">
+      <table class="admin-table" id="votes-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Người mẫu</th>
+            <th>Email</th>
+            <th>Ngày</th>
+            <th>Thời gian</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody id="votes-table-body">
+          <tr>
+            <td colspan="6" class="loading-cell">Đang tải phiếu bầu...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 
-  <main class="container admin-main">
-    <!-- Models Section -->
-    <section id="models-section" class="admin-section active">
-      <div class="section-header">
-        <h2>Manage Models</h2>
-        <button id="add-model-btn" class="btn btn-primary">Add New Model</button>
+  <!-- Rankings Section -->
+  <section id="rankings-section" class="admin-section">
+    <div class="section-header">
+      <h2>Xếp hạng hiện tại</h2>
+    </div>
+    
+    <div class="admin-filters">
+      <div class="search-box">
+        <input type="text" id="search-rankings" placeholder="Tìm kiếm theo tên hoặc đội...">
       </div>
-      
-      <div class="admin-filters">
-        <div class="search-box">
-          <input type="text" id="search-models" placeholder="Search by name or team...">
-        </div>
-        <div class="sort-options">
-          <label for="sort-models">Sort by:</label>
-          <select id="sort-models">
-            <option value="name-asc">Name (A-Z)</option>
-            <option value="name-desc">Name (Z-A)</option>
-            <option value="id-asc">ID (Ascending)</option>
-            <option value="id-desc">ID (Descending)</option>
-            <option value="votes-desc">Most Votes</option>
-            <option value="votes-asc">Least Votes</option>
-          </select>
-        </div>
+      <div class="sort-options">
+        <label for="sort-rankings">Sắp xếp theo:</label>
+        <select id="sort-rankings">
+          <option value="votes-desc" selected>Nhiều phiếu nhất</option>
+          <option value="votes-asc">Ít phiếu nhất</option>
+          <option value="name-asc">Tên (A-Z)</option>
+          <option value="name-desc">Tên (Z-A)</option>
+        </select>
       </div>
-      
-      <div class="admin-table-container">
-        <table class="admin-table" id="models-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Image</th>
-              <th>Name</th>
-              <th>Code</th>
-              <th>Team</th>
-              <th>Votes</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="models-table-body">
-            <tr>
-              <td colspan="7" class="loading-cell">Loading models...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+    </div>
+    
+    <div class="admin-table-container">
+      <table class="admin-table" id="rankings-table">
+        <thead>
+          <tr>
+            <th>Hạng</th>
+            <th>Hình ảnh</th>
+            <th>Tên</th>
+            <th>Mã</th>
+            <th>Đội</th>
+            <th>Phiếu bầu</th>
+          </tr>
+        </thead>
+        <tbody id="rankings-table-body">
+          <tr>
+            <td colspan="6" class="loading-cell">Đang tải xếp hạng...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 
-    <!-- Votes Section -->
-    <section id="votes-section" class="admin-section">
-      <div class="section-header">
-        <h2>Vote Statistics</h2>
-        <div class="stats-cards">
-          <div class="stat-card">
-            <h3>Total Votes</h3>
-            <p id="total-votes">0</p>
-          </div>
-          <div class="stat-card">
-            <h3>Today's Votes</h3>
-            <p id="today-votes">0</p>
-          </div>
-          <div class="stat-card">
-            <h3>Unique Voters</h3>
-            <p id="unique-voters">0</p>
-          </div>
+  <!-- Results Section -->
+  <section id="results-section" class="admin-section">
+    <div class="section-header">
+      <h2>Kết quả cuối cùng</h2>
+    </div>
+    
+    <div class="winners-podium">
+      <div class="podium-item second-place" id="second-place">
+        <div class="podium-number">2</div>
+        <div class="podium-model">
+          <img src="/placeholder.svg?height=120&width=120" alt="Hạng nhì">
+          <h3>Đang tải...</h3>
+          <p class="votes">0 phiếu</p>
         </div>
+        <div class="podium-base"></div>
       </div>
-      
-      <div class="admin-filters">
-        <div class="date-filter">
-          <label for="date-from">From:</label>
-          <input type="date" id="date-from">
-          <label for="date-to">To:</label>
-          <input type="date" id="date-to">
-          <button id="filter-votes-btn" class="btn btn-primary">Filter</button>
+      <div class="podium-item first-place" id="first-place">
+        <div class="podium-number">1</div>
+        <div class="podium-model">
+          <img src="/placeholder.svg?height=150&width=150" alt="Hạng nhất">
+          <h3>Đang tải...</h3>
+          <p class="votes">0 phiếu</p>
         </div>
+        <div class="podium-base"></div>
       </div>
-      
-      <div class="admin-table-container">
-        <table class="admin-table" id="votes-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Model</th>
-              <th>Email</th>
-              <th>Date</th>
-              <th>Time</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="votes-table-body">
-            <tr>
-              <td colspan="6" class="loading-cell">Loading votes...</td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="podium-item third-place" id="third-place">
+        <div class="podium-number">3</div>
+        <div class="podium-model">
+          <img src="/placeholder.svg?height=100&width=100" alt="Hạng ba">
+          <h3>Đang tải...</h3>
+          <p class="votes">0 phiếu</p>
+        </div>
+        <div class="podium-base"></div>
       </div>
-    </section>
+    </div>
 
-    <!-- Settings Section -->
-    <section id="settings-section" class="admin-section">
-      <div class="section-header">
-        <h2>Settings</h2>
-      </div>
-      
-      <div class="settings-form-container">
-        <form id="settings-form">
-          <div class="form-group">
-            <label for="contest-name">Contest Name</label>
-            <input type="text" id="contest-name" name="contestName">
-          </div>
-          
-          <div class="form-group">
-            <label for="voting-enabled">Enable Voting</label>
-            <div class="toggle-switch">
-              <input type="checkbox" id="voting-enabled" name="votingEnabled" checked>
-              <label for="voting-enabled"></label>
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label for="results-public">Make Results Public</label>
-            <div class="toggle-switch">
-              <input type="checkbox" id="results-public" name="resultsPublic" checked>
-              <label for="results-public"></label>
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label for="votes-per-day">Votes Per Day</label>
-            <input type="number" id="votes-per-day" name="votesPerDay" min="1" value="1">
-          </div>
-          
-          <button type="submit" class="btn btn-primary">Save Settings</button>
-        </form>
-      </div>
-    </section>
-  </main>
+    <div class="results-table-container">
+      <h3>Kết quả đầy đủ</h3>
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>Hạng</th>
+            <th>Người mẫu</th>
+            <th>Phiếu bầu</th>
+            <th>Phần trăm</th>
+          </tr>
+        </thead>
+        <tbody id="results-table-body">
+          <tr>
+            <td colspan="4" class="loading-cell">Đang tải kết quả...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-  <!-- Add/Edit Model Modal -->
-  <div class="modal" id="model-modal">
-    <div class="modal-content model-form-modal">
-      <span class="close-button">&times;</span>
-      <h2 id="model-modal-title">Add New Model</h2>
-      
-      <form id="model-form">
-        <input type="hidden" id="model-id">
-        
-        <div class="form-row">
-          <div class="form-group">
-            <label for="model-name">Name*</label>
-            <input type="text" id="model-name" name="name" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="model-code">Code/ID*</label>
-            <input type="text" id="model-code" name="code" required>
-          </div>
+    <div class="results-chart">
+      <h3>Phân bố phiếu bầu</h3>
+      <canvas id="results-chart"></canvas>
+    </div>
+  </section>
+
+  <!-- Settings Section -->
+  <section id="settings-section" class="admin-section">
+    <div class="section-header">
+      <h2>Cài đặt</h2>
+    </div>
+    
+    <div class="settings-form-container">
+      <form id="settings-form">
+        <div class="form-group">
+          <label for="contest-name">Tên cuộc thi</label>
+          <input type="text" id="contest-name" name="contestName">
         </div>
         
-        <div class="form-row">
-          <div class="form-group">
-            <label for="model-team">Team</label>
-            <input type="text" id="model-team" name="team">
+        <div class="form-group">
+          <label for="voting-enabled">Cho phép bình chọn</label>
+          <div class="toggle-switch">
+            <input type="checkbox" id="voting-enabled" name="votingEnabled" checked>
+            <label for="voting-enabled"></label>
           </div>
         </div>
         
         <div class="form-group">
-          <label for="model-description">Description</label>
-          <textarea id="model-description" name="description" rows="4"></textarea>
-        </div>
-        
-        <div class="form-group">
-          <label for="model-image">Image</label>
-          <div class="image-upload-container">
-            <div class="image-preview" id="image-preview">
-              <img src="/placeholder.svg?height=200&width=200" alt="Preview">
-            </div>
-            <div class="image-upload-controls">
-              <input type="file" id="model-image" name="image" accept="image/*">
-              <p class="upload-hint">Drag & drop an image or click to browse</p>
-            </div>
+          <label for="results-public">Công khai kết quả</label>
+          <div class="toggle-switch">
+            <input type="checkbox" id="results-public" name="resultsPublic" checked>
+            <label for="results-public"></label>
           </div>
         </div>
         
-        <div class="form-actions">
-          <button type="button" class="btn btn-outline" id="cancel-model-btn">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save Model</button>
+        <div class="form-group">
+          <label for="votes-per-day">Phiếu bầu mỗi ngày</label>
+          <input type="number" id="votes-per-day" name="votesPerDay" min="1" value="1">
         </div>
+        
+        <button type="submit" class="btn btn-primary">Lưu cài đặt</button>
       </form>
     </div>
-  </div>
+  </section>
+</main>
 
-  <!-- Delete Confirmation Modal -->
-  <div class="modal" id="confirm-modal">
-    <div class="modal-content confirm-modal">
-      <h2>Confirm Deletion</h2>
-      <p id="confirm-message">Are you sure you want to delete this item?</p>
+<!-- Add/Edit Model Modal -->
+<div class="modal" id="model-modal">
+  <div class="modal-content model-form-modal">
+    <span class="close-button">&times;</span>
+    <h2 id="model-modal-title">Thêm người mẫu mới</h2>
+    
+    <form id="model-form">
+      <input type="hidden" id="model-id">
       
-      <div class="confirm-actions">
-        <button class="btn btn-outline" id="cancel-delete-btn">Cancel</button>
-        <button class="btn btn-primary" id="confirm-delete-btn">Delete</button>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="model-name">Tên*</label>
+          <input type="text" id="model-name" name="name" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="model-code">Mã/ID*</label>
+          <input type="text" id="model-code" name="code" required>
+        </div>
       </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="model-team">Đội</label>
+          <input type="text" id="model-team" name="team">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="model-description">Mô tả</label>
+        <textarea id="model-description" name="description" rows="4"></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="model-image">Hình ảnh</label>
+        <div class="image-upload-container">
+          <div class="image-preview" id="image-preview">
+            <img src="/placeholder.svg?height=200&width=200" alt="Xem trước">
+          </div>
+          <div class="image-upload-controls">
+            <input type="file" id="model-image" name="image" accept="image/*">
+            <p class="upload-hint">Kéo & thả hình ảnh hoặc nhấp để duyệt</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="btn btn-outline" id="cancel-model-btn">Hủy</button>
+        <button type="submit" class="btn btn-primary">Lưu người mẫu</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal" id="confirm-modal">
+  <div class="modal-content confirm-modal">
+    <h2>Xác nhận xóa</h2>
+    <p id="confirm-message">Bạn có chắc chắn muốn xóa mục này?</p>
+    
+    <div class="confirm-actions">
+      <button class="btn btn-outline" id="cancel-delete-btn">Hủy</button>
+      <button class="btn btn-primary" id="confirm-delete-btn">Xóa</button>
     </div>
   </div>
+</div>
 
-  <script src="../js/admin-dashboard.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="../js/admin-dashboard.js"></script>
 </body>
 </html>
 

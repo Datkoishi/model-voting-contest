@@ -8,8 +8,8 @@ const loginMessage = document.getElementById("login-message")
 document.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("adminToken")
   if (token) {
-    // Redirect to dashboard if token exists
-    window.location.href = "dashboard.html"
+    // Redirect to index page with admin token set
+    window.location.href = "index.html"
   }
 })
 
@@ -37,7 +37,7 @@ loginForm.addEventListener("submit", async (event) => {
     const data = await response.json()
 
     if (!response.ok) {
-      throw new Error(data.message || "Login failed")
+      throw new Error(data.message || "Đăng nhập thất bại")
     }
 
     // Store token and user info
@@ -45,19 +45,19 @@ loginForm.addEventListener("submit", async (event) => {
     localStorage.setItem("adminUsername", data.username)
 
     // Show success message
-    loginMessage.textContent = "Login successful! Redirecting..."
+    loginMessage.textContent = "Đăng nhập thành công! Đang chuyển hướng..."
     loginMessage.classList.add("success")
     loginMessage.style.display = "block"
 
-    // Redirect to dashboard
+    // Redirect to index page
     setTimeout(() => {
-      window.location.href = "dashboard.html"
+      window.location.href = "index.html"
     }, 1000)
   } catch (error) {
-    console.error("Login error:", error)
+    console.error("Lỗi đăng nhập:", error)
 
     // Show error message
-    loginMessage.textContent = error.message || "Invalid username or password"
+    loginMessage.textContent = error.message || "Tên đăng nhập hoặc mật khẩu không đúng"
     loginMessage.classList.add("error")
     loginMessage.style.display = "block"
 

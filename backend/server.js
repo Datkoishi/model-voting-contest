@@ -47,15 +47,21 @@ app.use("/api/models", modelRoutes)
 app.use("/api", voteRoutes)
 app.use("/api/admin", adminRoutes)
 
-// Serve frontend for all other routes
+// Redirect old ranking and results pages to admin
+app.get("/ranking.html", (req, res) => {
+  res.redirect("/admin")
+})
+
+app.get("/results.html", (req, res) => {
+  res.redirect("/admin")
+})
+
+// Serve admin routes
 app.get("/admin", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/admin/login.html"))
+  res.sendFile(path.join(__dirname, "../frontend/login.html"))
 })
 
-app.get("/admin/dashboard", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/admin/dashboard.html"))
-})
-
+// Serve frontend for all other routes
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/index.html"))
 })

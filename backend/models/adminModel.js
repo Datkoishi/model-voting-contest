@@ -1,5 +1,4 @@
 import { pool } from "../config/database.js"
-import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
 
@@ -10,44 +9,31 @@ const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key"
 // Verify admin credentials and generate token
 async function login(username, password) {
   try {
-    // In a real application, you would fetch this from a database
     // For simplicity, we're using hardcoded credentials
-    const adminUsers = [
-      {
-        id: 1,
+    // In a real application, you would fetch this from a database
+
+    // Check for the default admin account
+    if (username === "admin" && password === "admin123") {
+      const token = jwt.sign({ id: 1, username: "admin" }, JWT_SECRET, { expiresIn: "24h" })
+
+      return {
+        token,
         username: "admin",
-        // Default password: admin123
-        passwordHash: "$2b$10$XFE/UzEFMfhpGx2U9BFOGOq9RWf6sZhLNM4JNxhzPKz8.TZ5jCNye",
-      },
-      {
-        id: 2,
+      }
+    }
+
+    // Check for truongdat account
+    if (username === "truongdat" && password === "18042005") {
+      const token = jwt.sign({ id: 2, username: "truongdat" }, JWT_SECRET, { expiresIn: "24h" })
+
+      return {
+        token,
         username: "truongdat",
-        // Password: 18042005
-        passwordHash: "$2b$10$Ht0vQSz8VWDCFgQC1Yl.9.Ql1KJl.Pf9EMeZwsYQNJTHUlIcsr7Uy",
-      },
-    ]
-
-    // Find user by username
-    const adminUser = adminUsers.find((user) => user.username === username)
-
-    // Check if username matches
-    if (!adminUser) {
-      throw new Error("Invalid username or password")
+      }
     }
 
-    // Verify password
-    const passwordMatch = await bcrypt.compare(password, adminUser.passwordHash)
-    if (!passwordMatch) {
-      throw new Error("Invalid username or password")
-    }
-
-    // Generate JWT token
-    const token = jwt.sign({ id: adminUser.id, username: adminUser.username }, JWT_SECRET, { expiresIn: "24h" })
-
-    return {
-      token,
-      username: adminUser.username,
-    }
+    // If no match found
+    throw new Error("Invalid username or password")
   } catch (error) {
     console.error("Error in admin login:", error)
     throw error
@@ -66,14 +52,45 @@ function verifyToken(token) {
 // Get all models with vote counts (admin version with more details)
 async function getAllModels() {
   try {
-    const [rows] = await pool.query(`
-      SELECT m.id, m.name, m.code, m.team, m.description, m.image, COUNT(v.id) as votes
-      FROM models m
-      LEFT JOIN votes v ON m.id = v.model_id
-      GROUP BY m.id
-      ORDER BY m.name ASC
-    `)
-    return rows
+    // Modified query to check if columns exist first
+    const [columns] = await pool.query(`
+    SELECT COLUMN_NAME 
+    FROM INFORMATION_SCHEMA.COLUMNS 
+    WHERE TABLE_SCHEMA = DATABASE() 
+    AND TABLE_NAME = 'models'
+  `)
+
+    const columnNames = columns.map((col) => col.COLUMN_NAME)
+
+    // Build query based on existing columns
+    let query = `
+    SELECT m.id, m.name, m.description, m.image, COUNT(v.id) as votes
+  `
+
+    // Add code and team columns if they exist
+    if (columnNames.includes("code")) {
+      query += `, m.code`
+    }
+
+    if (columnNames.includes("team")) {
+      query += `, m.team`
+    }
+
+    query += `
+    FROM models m
+    LEFT JOIN votes v ON m.id = v.model_id
+    GROUP BY m.id
+    ORDER BY m.name ASC
+  `
+
+    const [rows] = await pool.query(query)
+
+    // Add empty values for missing columns
+    return rows.map((row) => ({
+      ...row,
+      code: row.code || null,
+      team: row.team || null,
+    }))
   } catch (error) {
     console.error("Error in getAllModels:", error)
     throw error
@@ -83,17 +100,49 @@ async function getAllModels() {
 // Get model by ID (admin version with all details)
 async function getModelById(id) {
   try {
-    const [rows] = await pool.query(
-      `
-      SELECT m.*, COUNT(v.id) as votes
-      FROM models m
-      LEFT JOIN votes v ON m.id = v.model_id
-      WHERE m.id = ?
-      GROUP BY m.id
-    `,
-      [id],
-    )
-    return rows[0]
+    // Modified query to check if columns exist first
+    const [columns] = await pool.query(`
+    SELECT COLUMN_NAME 
+    FROM INFORMATION_SCHEMA.COLUMNS 
+    WHERE TABLE_SCHEMA = DATABASE() 
+    AND TABLE_NAME = 'models'
+  `)
+
+    const columnNames = columns.map((col) => col.COLUMN_NAME)
+
+    // Build query based on existing columns
+    let query = `
+    SELECT m.id, m.name, m.description, m.image, COUNT(v.id) as votes
+  `
+
+    // Add code and team columns if they exist
+    if (columnNames.includes("code")) {
+      query += `, m.code`
+    }
+
+    if (columnNames.includes("team")) {
+      query += `, m.team`
+    }
+
+    query += `
+    FROM models m
+    LEFT JOIN votes v ON m.id = v.model_id
+    WHERE m.id = ?
+    GROUP BY m.id
+  `
+
+    const [rows] = await pool.query(query, [id])
+
+    if (rows.length === 0) {
+      return null
+    }
+
+    // Add empty values for missing columns
+    return {
+      ...rows[0],
+      code: rows[0].code || null,
+      team: rows[0].team || null,
+    }
   } catch (error) {
     console.error("Error in getModelById:", error)
     throw error
@@ -104,10 +153,32 @@ async function getModelById(id) {
 async function createModel(model) {
   try {
     const { name, code, team, description, image } = model
+
+    // Check if columns exist first
+    const [columns] = await pool.query(`
+    SELECT COLUMN_NAME 
+    FROM INFORMATION_SCHEMA.COLUMNS 
+    WHERE TABLE_SCHEMA = DATABASE() 
+    AND TABLE_NAME = 'models'
+  `)
+
+    const columnNames = columns.map((col) => col.COLUMN_NAME)
+
+    // If code and team columns don't exist, add them
+    if (!columnNames.includes("code")) {
+      await pool.query(`ALTER TABLE models ADD COLUMN code VARCHAR(50)`)
+    }
+
+    if (!columnNames.includes("team")) {
+      await pool.query(`ALTER TABLE models ADD COLUMN team VARCHAR(100)`)
+    }
+
+    // Now we can safely insert with all columns
     const [result] = await pool.query(
       "INSERT INTO models (name, code, team, description, image) VALUES (?, ?, ?, ?, ?)",
       [name, code, team, description, image],
     )
+
     return { id: result.insertId, ...model }
   } catch (error) {
     console.error("Error in createModel:", error)
@@ -119,6 +190,25 @@ async function createModel(model) {
 async function updateModel(id, model) {
   try {
     const { name, code, team, description, image } = model
+
+    // Check if columns exist first
+    const [columns] = await pool.query(`
+    SELECT COLUMN_NAME 
+    FROM INFORMATION_SCHEMA.COLUMNS 
+    WHERE TABLE_SCHEMA = DATABASE() 
+    AND TABLE_NAME = 'models'
+  `)
+
+    const columnNames = columns.map((col) => col.COLUMN_NAME)
+
+    // If code and team columns don't exist, add them
+    if (!columnNames.includes("code")) {
+      await pool.query(`ALTER TABLE models ADD COLUMN code VARCHAR(50)`)
+    }
+
+    if (!columnNames.includes("team")) {
+      await pool.query(`ALTER TABLE models ADD COLUMN team VARCHAR(100)`)
+    }
 
     // If image is provided, update it, otherwise keep the existing one
     let query, params
@@ -142,14 +232,31 @@ async function updateModel(id, model) {
 // Delete a model
 async function deleteModel(id) {
   try {
-    // First delete all votes for this model
-    await pool.query("DELETE FROM votes WHERE model_id = ?", [id])
+    // First delete all votes for this model - using a transaction to ensure data integrity
+    const connection = await pool.getConnection()
 
-    // Then delete the model
-    await pool.query("DELETE FROM models WHERE id = ?", [id])
+    try {
+      await connection.beginTransaction()
+
+      // Delete all votes for this model
+      await connection.query("DELETE FROM votes WHERE model_id = ?", [id])
+      console.log(`Đã xóa tất cả phiếu bầu cho người mẫu ID ${id}`)
+
+      // Then delete the model
+      await connection.query("DELETE FROM models WHERE id = ?", [id])
+      console.log(`Đã xóa người mẫu ID ${id}`)
+
+      await connection.commit()
+    } catch (error) {
+      await connection.rollback()
+      throw error
+    } finally {
+      connection.release()
+    }
+
     return { id }
   } catch (error) {
-    console.error("Error in deleteModel:", error)
+    console.error("Lỗi khi xóa người mẫu:", error)
     throw error
   }
 }
@@ -158,11 +265,11 @@ async function deleteModel(id) {
 async function getAllVotes() {
   try {
     const [rows] = await pool.query(`
-      SELECT v.id, v.model_id, m.name as model_name, v.email, v.created_at
-      FROM votes v
-      JOIN models m ON v.model_id = m.id
-      ORDER BY v.created_at DESC
-    `)
+    SELECT v.id, v.model_id, m.name as model_name, v.email, v.created_at
+    FROM votes v
+    JOIN models m ON v.model_id = m.id
+    ORDER BY v.created_at DESC
+  `)
     return rows
   } catch (error) {
     console.error("Error in getAllVotes:", error)
@@ -174,11 +281,11 @@ async function getAllVotes() {
 async function getVotesByDate(dateFrom, dateTo) {
   try {
     let query = `
-      SELECT v.id, v.model_id, m.name as model_name, v.email, v.created_at
-      FROM votes v
-      JOIN models m ON v.model_id = m.id
-      WHERE 1=1
-    `
+    SELECT v.id, v.model_id, m.name as model_name, v.email, v.created_at
+    FROM votes v
+    JOIN models m ON v.model_id = m.id
+    WHERE 1=1
+  `
 
     const params = []
 
