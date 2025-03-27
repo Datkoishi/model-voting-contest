@@ -633,4 +633,33 @@
     }
   }
   
+  /* Admin Link */
+  .admin-link {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.8rem;
+    background-color: #f8f9fa;
+    border: 1px solid #e1e4e8;
+    border-radius: 4px;
+    color: #666;
+    text-decoration: none;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    transition: all 0.2s ease;
+  }
+  
+  .admin-link:hover {
+    background-color: #e9ecef;
+    color: #333;
+  }
+  
+  @media (max-width: 768px) {
+    .admin-link {
+      position: static;
+      display: block;
+      margin: 1rem auto;
+      width: fit-content;
+    }
+  }
+  
   

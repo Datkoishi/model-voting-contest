@@ -73,10 +73,19 @@ async function initializeDatabase() {
     // Check if admin user exists, if not create default admin
     const [adminRows] = await connection.query("SELECT COUNT(*) as count FROM admin_users")
     if (adminRows[0].count === 0) {
-      // Create default admin user (username: admin, password: admin123)
-      const passwordHash = await bcrypt.hash("admin123", 10)
-      await connection.query("INSERT INTO admin_users (username, password) VALUES (?, ?)", ["admin", passwordHash])
-      console.log("Default admin user created")
+      // Create default admin users
+      // 1. Default admin (username: admin, password: admin123)
+      const adminPasswordHash = await bcrypt.hash("admin123", 10)
+      await connection.query("INSERT INTO admin_users (username, password) VALUES (?, ?)", ["admin", adminPasswordHash])
+
+      // 2. Custom admin (username: truongdat, password: 18042005)
+      const truongdatPasswordHash = await bcrypt.hash("18042005", 10)
+      await connection.query("INSERT INTO admin_users (username, password) VALUES (?, ?)", [
+        "truongdat",
+        truongdatPasswordHash,
+      ])
+
+      console.log("Admin users created")
     }
 
     // Check if models table is empty

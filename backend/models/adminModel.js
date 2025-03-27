@@ -12,15 +12,26 @@ async function login(username, password) {
   try {
     // In a real application, you would fetch this from a database
     // For simplicity, we're using hardcoded credentials
-    const adminUser = {
-      id: 1,
-      username: "admin",
-      // Default password: admin123
-      passwordHash: "$2b$10$XFE/UzEFMfhpGx2U9BFOGOq9RWf6sZhLNM4JNxhzPKz8.TZ5jCNye",
-    }
+    const adminUsers = [
+      {
+        id: 1,
+        username: "admin",
+        // Default password: admin123
+        passwordHash: "$2b$10$XFE/UzEFMfhpGx2U9BFOGOq9RWf6sZhLNM4JNxhzPKz8.TZ5jCNye",
+      },
+      {
+        id: 2,
+        username: "truongdat",
+        // Password: 18042005
+        passwordHash: "$2b$10$Ht0vQSz8VWDCFgQC1Yl.9.Ql1KJl.Pf9EMeZwsYQNJTHUlIcsr7Uy",
+      },
+    ]
+
+    // Find user by username
+    const adminUser = adminUsers.find((user) => user.username === username)
 
     // Check if username matches
-    if (username !== adminUser.username) {
+    if (!adminUser) {
       throw new Error("Invalid username or password")
     }
 
