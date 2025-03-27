@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đăng nhập quản trị - Cuộc thi bình chọn người mẫu</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-page">
+<div class="admin-login-container">
+  <div class="admin-login-card">
+    <div class="admin-login-header">
+      <h1>Đăng nhập quản trị</h1>
+      <p>Nhập thông tin đăng nhập để truy cập bảng điều khiển</p>
+    </div>
+    
+    <form id="admin-login-form">
+      <div class="form-group">
+        <label for="username">Tên đăng nhập</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Mật khẩu</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      
+      <div class="form-message" id="login-message"></div>
+      
+      <button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
+    </form>
+    
+    <div class="admin-login-footer">
+      <a href="index.html">Quay lại trang chính</a>
+    </div>
+  </div>
+</div>
+
+<script src="js/admin-login.js"></script>
+</body>
+</html>
+
